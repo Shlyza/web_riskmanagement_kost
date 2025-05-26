@@ -21,6 +21,7 @@ $daftar = $keluhanModel->ambilSemua();
         <th>Gambar</th>
         <th>Status</th>
         <th>Aksi</th>
+        <th>Monitoring</th>
     </tr>
 
     <?php foreach ($daftar as $k): ?>
@@ -41,6 +42,9 @@ $daftar = $keluhanModel->ambilSemua();
         <td>
             <a href="ubah_status.php?id=<?= $k['id'] ?>&status=proses">Proses</a> |
             <a href="ubah_status.php?id=<?= $k['id'] ?>&status=selesai">Selesai</a>
+        </td>
+        <td>
+               <a href="tindakan_admin.php?keluhan_id=<?= $k['id'] ?>">Lihat Tindakan</a>
         </td>
     </tr>
     <?php endforeach; ?>
