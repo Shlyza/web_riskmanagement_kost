@@ -11,6 +11,9 @@ $data = $penghuniModel->ambilSemua();
 ?>
 
 <h2>Daftar Penghuni Kost</h2>
+<a href="../dashboard.php">Home</a><br>
+<a href="../admin/daftar_monitoring.php">Daftar Monitoring</a><br>
+<a href="../admin/daftar_keluhan.php">Daftar Keluhan</a><br>
 <table border="1" cellpadding="10">
     <tr>
         <th>ID</th>

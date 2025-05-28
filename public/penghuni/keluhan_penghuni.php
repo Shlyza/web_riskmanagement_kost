@@ -9,8 +9,12 @@ if (!isPenghuni()) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $keluhan = $_POST['keluhan'];
     $deskripsi = $_POST['deskripsi'];
+    $likelihood = (int)$_POST['likelihood'];
+    $impact = (int)$_POST['impact'];
     $user_id = $_SESSION['user']['id'];
     $gambar = null;
+
+
     if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] === 0) {
         $target_dir = "../../uploads/";
         $nama_file = time() . "_" . basename($_FILES["gambar"]["name"]);
@@ -30,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $keluhan = new Keluhan($keluhan, $deskripsi, $gambar, $user_id);
+    $keluhan = new Keluhan($keluhan, $deskripsi, $gambar, $user_id, $likelihood, $impact);
     if ($keluhan->simpan()) {
         echo "Data keluhan berhasil disimpan!";
     } else{
@@ -41,8 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <h2>Lapor Keluhan Lingkungan KOST</h2>
 <form action="" method="post" enctype="multipart/form-data">
-    Keluhan : <input type="text" name="keluhan" required><br>
-    Deskripsi : <textarea  name="deskripsi"></textarea required><br>
-    Gambar (opsional): <input type="file" name="gambar" accept="image/*"><br><br>
+    Keluhan             : <input type="text" name="keluhan" required><br>
+    Deskripsi           : <textarea name="deskripsi"></textarea><br>
+    Likelihood (1-5)[Nilai Kemungkinan]    : <input type="number" name="likelihood" min="1" max="5" required><br>
+    Impact (1-5)[Nilai Dampak]       : <input type="number" name="impact" min="1" max="5" required><br>
+    Gambar (opsional)   : <input type="file" name="gambar" accept="image/*"><br><br>
     <button type="submit">Simpan</button>
 </form>
