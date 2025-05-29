@@ -70,7 +70,7 @@ if ($filter) {
             <a href="ubah_status.php?id=<?= $k['id'] ?>&status=selesai">Selesai</a>
         </td>
         <td>
-               <a href="tindakan_admin.php?keluhan_id=<?= $k['id'] ?>">Lihat Tindakan</a>
+               <a href="tindakan_admin.php?keluhan_id=<?= $k['id'] ?>">Tindakan</a>
         </td>
         <td><?= htmlspecialchars($k['likelihood_keluhan']) ?></td>
         <td><?= htmlspecialchars($k['impact_keluhan']) ?></td>

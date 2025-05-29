@@ -8,13 +8,23 @@ if (!isAdmin()) {
 
 $tindakanModel = new Tindakan();
 $keluhan_id = $_GET['keluhan_id'] ?? 0;
-$list_tindakan = $tindakanModel->ambilSemua($keluhan_id);
+
+// gunakan setter untuk mengisi nilai keluhan_id
+$tindakanModel->setKeluhanId($keluhan_id);
+
+// lalu panggil method ambilSemua() tanpa parameter
+$list_tindakan = $tindakanModel->ambilSemua();
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $deskripsi = $_POST['deskripsi'];
     $oleh = $_POST['oleh'];
+    $tindakanModel->setLikelihood((int)$_POST['likelihood']);
+    $tindakanModel->setImpact((int)$_POST['impact']);
+// Tidak perlu setResult lagi
+
     $gambar = null;
+
     if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] === 0) {
         $target_dir = "../../uploads/tindakan/";
         $nama_file = time() . "_" . basename($_FILES["gambar"]["name"]);
@@ -33,13 +43,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    if ($tindakanModel->tambah($keluhan_id, $deskripsi, $oleh,$gambar)) {
+    $tindakanModel->setKeluhanId($keluhan_id);
+    $tindakanModel->setDeskripsi($deskripsi);
+    $tindakanModel->setOleh($oleh);
+    $tindakanModel->setGambar($gambar);
+
+    if ($tindakanModel->tambah()) {
         header("Location: tindakan_admin.php?keluhan_id=$keluhan_id");
         exit;
     } else {
         echo "Gagal menambah tindakan.";
     }
 }
+
 ?>
 
 <h2>Tambah Tindakan untuk Keluhan ID: <?= $keluhan_id ?></h2>
@@ -49,7 +65,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     Dilakukan Oleh:<br>
     <input type="text" name="oleh" required><br>
     Upload Gambar Tindakan:<br>
-    <input type="file" name="gambar" accept="image/*"><br><br>
+    Likelihood (1-5)[Nilai Kemungkinan]    : <input type="number" name="likelihood" min="1" max="5" required><br>
+    Impact (1-5)[Nilai Dampak]       : <input type="number" name="impact" min="1" max="5" required><br>
+
+    <input type="file" name="gambar" accept="image/*"><br>
+    
+
+    <br>
     <button type="submit">Simpan Tindakan</button>
 </form>
 
@@ -62,6 +84,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <th>Tanggal</th>
         <th>Gambar</th>
         <th>Oleh</th>
+        <th>likelihood</th>
+        <th>Impact</th>
+        <th>Level Tindakan</th>
     </tr>
     <?php foreach ($list_tindakan as $lt): ?>
         <tr>
@@ -76,6 +101,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
             </td>
             <td><?= htmlspecialchars($lt['dilakukan_oleh']) ?></td>
+            <td><?= htmlspecialchars($lt['likelihood_tindakan'])?></td>
+            <td><?= htmlspecialchars($lt['impact_tindakan'])?></td>
+            <td><?= htmlspecialchars($lt['result_tindakan'])?></td>
         </tr>
     <?php endforeach; ?>
 </table>
